@@ -1,6 +1,6 @@
 package com.abstractkamen.tasks.impl;
 
-import com.abstractkamen.tasks.CountValidEnglishSolution;
+import com.abstractkamen.tasks.CountWordsSolution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PreprocessingTrieSolution implements CountValidEnglishSolution {
+public class PreprocessingTrieSolution implements CountWordsSolution {
 
     private static final int INITIAL_CAPACITY = 279_496;
 
@@ -17,16 +17,16 @@ public class PreprocessingTrieSolution implements CountValidEnglishSolution {
     public void solve(InputStream input, int targetLength, boolean debug) throws IOException {
         System.out.printf("    Preprocessing Trie Solution with target len [%d]%n", targetLength);
         final long startInput = System.currentTimeMillis();
-        final Collection<int[]> nineLetterWords = new ArrayList<>(INITIAL_CAPACITY);
-        final ValidEnglishWordTrie validEnglishWords = new ValidEnglishWordTrie();
-        int totalWords = preprocessing(input, nineLetterWords, validEnglishWords, targetLength);
+        final Collection<int[]> targetWords = new ArrayList<>(INITIAL_CAPACITY);
+        final ValidWordTrie validWords = new ValidWordTrie();
+        int totalWords = preprocessing(input, targetWords, validWords, targetLength);
         System.out.printf("Read Input [%d] lines in [%s]%n", totalWords, Formats.getFormattedMillisTime(startInput, System.currentTimeMillis()));
         int wordsFound = 0;
         final long startLookingAtWords = System.currentTimeMillis();
-        for (int[] nineLetterWord : nineLetterWords) {
-            if (isValid(nineLetterWord, validEnglishWords, debug)) {
+        for (int[] word : targetWords) {
+            if (isValid(word, validWords, debug)) {
                 if (debug) {
-                    showWord(nineLetterWord);
+                    showWord(word);
                 }
                 wordsFound++;
             }
@@ -34,15 +34,15 @@ public class PreprocessingTrieSolution implements CountValidEnglishSolution {
         System.out.printf("Found [%d] valid words in [%s]%n", wordsFound, Formats.getFormattedMillisTime(startLookingAtWords, System.currentTimeMillis()));
     }
 
-    private boolean isValid(int[] word, ValidEnglishWordTrie validEnglishWords, boolean debug) {
-        if (validEnglishWords.isValidSingleLetterWord(word)) return true;
-        if (!validEnglishWords.isValidWord(word)) return false;
+    private boolean isValid(int[] word, ValidWordTrie validWords, boolean debug) {
+        if (validWords.isValidSingleLetterWord(word)) return true;
+        if (!validWords.isValidWord(word)) return false;
 
         for (int i = 0; i < word.length; i++) {
             int c = word[i];
             if (c == -1) continue;
             word[i] = -1;
-            if (isValid(word, validEnglishWords, debug)) {
+            if (isValid(word, validWords, debug)) {
                 if (debug) {
                     showWord(word);
                 }
@@ -63,7 +63,7 @@ public class PreprocessingTrieSolution implements CountValidEnglishSolution {
         System.out.println();
     }
 
-    private int preprocessing(InputStream input, Collection<int[]> nineLetterWords, ValidEnglishWordTrie validEnglishWords, int targetLength) throws IOException {
+    private int preprocessing(InputStream input, Collection<int[]> targetWords, ValidWordTrie validWords, int targetLength) throws IOException {
         try (var br = new BufferedReader(new InputStreamReader(input))) {
             // skip first two lines
             br.readLine();
@@ -76,18 +76,18 @@ public class PreprocessingTrieSolution implements CountValidEnglishSolution {
                 for (int i = 0; i < line.length(); i++) {
                     chars[i] = line.charAt(i);
                 }
-                validEnglishWords.insert(chars);
+                validWords.insert(chars);
                 if (line.length() == targetLength) {
-                    nineLetterWords.add(chars);
+                    targetWords.add(chars);
                 }
             }
             return totalWords;
         }
     }
 
-    private static class ValidEnglishWordTrie {
+    private static class ValidWordTrie {
         private static class WordBuffer {
-            public static final int SOME_LONG_WORD_LENGTH_I_DEFINITELY_LOOKED_UP = 420;
+            private static final int SOME_LONG_WORD_LENGTH_I_DEFINITELY_LOOKED_UP = 420;
             private final int[] items = new int[SOME_LONG_WORD_LENGTH_I_DEFINITELY_LOOKED_UP];
             private int length;
 
@@ -113,7 +113,7 @@ public class PreprocessingTrieSolution implements CountValidEnglishSolution {
         private final Node root;
         private final WordBuffer wordBuffer = new WordBuffer();
 
-        public ValidEnglishWordTrie() {
+        public ValidWordTrie() {
             root = new Node();
         }
 

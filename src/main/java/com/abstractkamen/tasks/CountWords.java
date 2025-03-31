@@ -34,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
  *     - https://raw.githubusercontent.com/nikiiv/JavaCodingTestOne/master/scrabble-words.txt
  *   3. Actual download of words content should not be part of the 'less than two seconds constraint'
  */
-public class CountEnglishWords {
+public class CountWords {
 
     private static final String PREP_SET_COMMAND = "prepset";
     private static final String PREP_TRIE_COMMAND = "preptrie";
@@ -69,8 +69,8 @@ public class CountEnglishWords {
                 targetLen = CompletableFuture.completedFuture(args[++i])
                         .thenApply(Integer::parseInt)
                         .exceptionally(e -> {
-                            System.out.println("Warning -targetLen accepts only valid integers. Using default [9] value.");
-                            return 9;
+                            System.out.printf("Warning -targetLen accepts only valid integers. Using default [%d] value%n", DEFAULT_TARGET_LEN);
+                            return DEFAULT_TARGET_LEN;
                         })
                         .join();
             } else if ("-debug".equals(args[i])) {

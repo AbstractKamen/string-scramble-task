@@ -1,6 +1,6 @@
 package com.abstractkamen.tasks.impl;
 
-import com.abstractkamen.tasks.CountValidEnglishSolution;
+import com.abstractkamen.tasks.CountWordsSolution;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,19 +10,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NoPreprocessingSetSolution implements CountValidEnglishSolution {
+public class NoPreprocessingSetSolution implements CountWordsSolution {
 
     @Override
     public void solve(InputStream input, int targetLength, boolean debug) throws IOException {
         System.out.printf("    No Preprocessing Set Solution with target len [%d]%n", targetLength);
         final long startInput = System.currentTimeMillis();
         List<String> inList = loadAllWords(input);
-        final Set<String> validEnglishWords = new HashSet<>(inList);
-        System.out.printf("Read Input [%d] lines in [%s]%n", validEnglishWords.size(), Formats.getFormattedMillisTime(startInput, System.currentTimeMillis()));
+        final Set<String> validWords = new HashSet<>(inList);
+        System.out.printf("Read Input [%d] lines in [%s]%n", validWords.size(), Formats.getFormattedMillisTime(startInput, System.currentTimeMillis()));
         int wordsFound = 0;
         final long startLookingAtWords = System.currentTimeMillis();
-        for (String word : validEnglishWords) {
-            if (word.length() == targetLength && isValid(word, validEnglishWords, debug)) {
+        for (String word : validWords) {
+            if (word.length() == targetLength && isValid(word, validWords, debug)) {
                 if (debug) {
                     System.out.println(word);
                 }
@@ -38,12 +38,12 @@ public class NoPreprocessingSetSolution implements CountValidEnglishSolution {
         }
     }
 
-    private boolean isValid(String word, Set<String> validEnglishWords, boolean debug) {
+    private boolean isValid(String word, Set<String> validWords, boolean debug) {
         if (word.length() == 1 && (word.charAt(0) == 'I' || word.charAt(0) == 'A')) return true;
-        if (!validEnglishWords.contains(word)) return false;
+        if (!validWords.contains(word)) return false;
         for (int i = 0; i < word.length(); i++) {
             final String subWord = word.substring(0, i) + word.substring(i + 1);
-            if (isValid(subWord, validEnglishWords, debug)) {
+            if (isValid(subWord, validWords, debug)) {
                 if (debug) System.out.println(subWord);
                 return true;
             }

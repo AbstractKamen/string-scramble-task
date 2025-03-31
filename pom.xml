@@ -31,12 +31,12 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.abstractkamen.tasks.CountEnglishWords</mainClass>
+                            <mainClass>com.abstractkamen.tasks.CountWords</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
+            <plugin><!--Lul for later-->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
